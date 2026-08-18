@@ -42,6 +42,7 @@ interface GoogleLoginButtonProps {
 }
 
 const GOOGLE_SCRIPT_ID = 'google-identity-services';
+const DEFAULT_GOOGLE_CLIENT_ID = '692184596133-8tuifmvjaqvvkkqcrrgds7odr5fjdk3m.apps.googleusercontent.com';
 let initializedClientId: string | null = null;
 let activeCredentialHandler: ((idToken: string) => void) | null = null;
 
@@ -63,7 +64,7 @@ export default function GoogleLoginButton({ onCredential, disabled = false }: Go
   const [configurationError, setConfigurationError] = useState('');
 
   useEffect(() => {
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || DEFAULT_GOOGLE_CLIENT_ID;
 
     if (!clientId) {
       setConfigurationError('Chưa cấu hình Google Client ID.');
