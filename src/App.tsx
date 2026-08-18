@@ -3359,10 +3359,10 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className={`grid grid-cols-1 gap-6 ${orchidAdminViewMode === 'grid' ? 'md:grid-cols-2 xl:grid-cols-3' : ''}`} aria-busy={loadingAdminOrchids}>
+                <div className={`grid grid-cols-1 gap-6 ${orchidAdminViewMode === 'grid' ? 'md:grid-cols-2' : ''}`} aria-busy={loadingAdminOrchids}>
                   {!loadingAdminOrchids && !adminOrchidError && pagedOrchids.map((orc) => (
-                    <div key={orc.id} className={`bg-white rounded-xl border border-outline-variant/40 hover:border-botanical-green/40 duration-300 transition-all group relative overflow-hidden ${orchidAdminViewMode === 'grid' ? 'flex flex-col' : 'flex gap-4 p-4'}`}>
-                      <div className={`relative overflow-hidden shrink-0 border-outline-variant/30 bg-surface-container ${orchidAdminViewMode === 'grid' ? 'aspect-[1.15] w-full border-b' : 'h-24 w-24 rounded-lg border'}`}>
+                    <div key={orc.id} className="relative flex gap-4 rounded-xl border border-outline-variant/40 bg-white p-4 transition-all duration-300 group hover:border-botanical-green/40">
+                      <div className="h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-outline-variant/30 bg-surface-container">
                         <img 
                           src={getOrchidImageUrls(orc)[0] || "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?q=80&w=300"}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
@@ -3372,30 +3372,24 @@ export default function App() {
                           }}
                           referrerPolicy="no-referrer"
                         />
-                        {orchidAdminViewMode === 'grid' && (orc.hasFragrance || orc.isPopular) && (
-                          <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
-                            {orc.hasFragrance && <span className="rounded-sm bg-[#667234] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">Có hương thơm</span>}
-                            {orc.isPopular && <span className="rounded-sm bg-[#667234] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">Phổ biến</span>}
-                          </div>
-                        )}
                       </div>
-                      <div className={`flex min-w-0 flex-1 flex-col justify-between ${orchidAdminViewMode === 'grid' ? 'p-5' : ''}`}>
+                      <div className="flex min-w-0 flex-1 flex-col justify-between">
                         <div>
                           <div className="flex items-start justify-between gap-1 pr-14">
-                            <h4 className={`${orchidAdminViewMode === 'grid' ? 'text-2xl font-medium' : 'text-base font-bold'} truncate font-serif text-on-surface`}>{orc.name}</h4>
+                            <h4 className="truncate font-serif text-base font-bold text-on-surface">{orc.name}</h4>
                             <span className="text-[9px] uppercase font-mono tracking-tighter bg-surface-container px-2 py-0.5 rounded text-outline">
                               {categories.find(c => c.id === orc.categoryIds[0])?.name || 'Chưa phân loại'}
                             </span>
                           </div>
-                          <p className={`${orchidAdminViewMode === 'grid' ? 'mt-1 text-sm' : 'mt-0.5 text-[11px]'} truncate italic leading-snug text-[#56642b]`}>
+                          <p className="mt-0.5 truncate text-[11px] italic font-semibold leading-none text-[#56642b]">
                             <OrchidScientificName value={orc.englishName} />
                           </p>
-                          <p className={`${orchidAdminViewMode === 'grid' ? 'mt-5 text-sm' : 'mt-2 text-xs'} line-clamp-2 leading-relaxed text-[#434748]`}>
+                          <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-[#434748]">
                             {orc.shortDescription}
                           </p>
                         </div>
                         
-                        <div className={`${orchidAdminViewMode === 'grid' ? 'mt-8 border-0' : 'mt-2 border-t pt-2'} flex items-center text-[10px] text-outline`}>
+                        <div className="mt-2 flex items-center border-t border-[#f4f4f2] pt-2 text-[10px] text-outline">
                           <span className={`px-2 py-0.5 rounded font-bold ${
                             orc.isPopular ? 'bg-[#d6e7a0]/30 text-[#56642b]' : 'bg-surface-container text-outline'
                           }`}>
@@ -3405,7 +3399,7 @@ export default function App() {
                       </div>
 
                       {/* Interactive hover administrative command tab */}
-                      <div className={`absolute flex gap-1 transition-opacity duration-200 ${orchidAdminViewMode === 'grid' ? 'right-3 top-3 opacity-100 rounded-lg bg-white p-1 shadow-md' : 'bottom-4 right-4 opacity-0 group-hover:opacity-100'}`}>
+                      <div className="absolute bottom-4 right-4 flex gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                         <button
                           onClick={() => orc.id && void handleOpenEditOrchid(orc.id)}
                           className="p-1.5 rounded-md bg-[#f4f4f2] hover:bg-botanical-green hover:text-white text-botanical-green transition-all"
