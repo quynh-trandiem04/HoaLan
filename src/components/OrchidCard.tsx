@@ -24,7 +24,7 @@ const OrchidCard: React.FC<OrchidCardProps> = ({
   return (
     <div 
       onClick={() => orchid.id && onSelect(orchid.id)}
-      className={`group bg-white border border-[#747878]/10 hover:border-[#56642b]/30 rounded-md overflow-hidden flex transition-all duration-500 cursor-pointer hover:shadow-xl hover:-translate-y-1 ${isList ? 'min-h-52 flex-row' : 'flex-col'}`}
+      className={`group h-full bg-white border border-[#747878]/10 hover:border-[#56642b]/30 rounded-md overflow-hidden flex transition-all duration-500 cursor-pointer hover:shadow-xl hover:-translate-y-1 ${isList ? 'min-h-52 flex-row' : 'flex-col'}`}
     >
       {/* Image container */}
       <div className={`relative shrink-0 bg-surface-container overflow-hidden ${isList ? 'w-[38%] min-w-32 border-r border-[#747878]/10' : 'aspect-[4/3] border-b border-[#747878]/10'}`}>

@@ -487,7 +487,7 @@ export default function ListOrchids({
                 : 'grid grid-cols-1 gap-5 xl:grid-cols-2'
               }>
                 {paginatedOrchids.map((orchid) => (
-                  <div key={orchid.id ?? orchid.slug} className="relative">
+                  <div key={orchid.id ?? orchid.slug} className="relative h-full">
                   <OrchidCard
                     key={orchid.id}
                     orchid={orchid}
