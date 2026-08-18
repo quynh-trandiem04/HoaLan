@@ -38,13 +38,13 @@ const OrchidCard: React.FC<OrchidCardProps> = ({
         {/* Floating Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
           {orchid.isPopular && (
-            <span className="bg-botanical-green text-white text-[9px] tracking-widest uppercase font-semibold font-sans px-2.5 py-1 rounded-[2px] shadow-sm">
-              ĐƯỢC ƯU CHUỘNG
+            <span className="bg-botanical-green text-white text-[9px] tracking-wider font-semibold font-sans px-2.5 py-1 rounded-[2px] shadow-sm">
+              Phổ biến
             </span>
           )}
           {orchid.hasFragrance && (
-            <span className="bg-antique-gold text-white text-[9px] tracking-widest uppercase font-semibold font-sans px-2.5 py-1 rounded-[2px] shadow-sm">
-              CÓ HƯƠNG THƠM
+            <span className="bg-antique-gold text-white text-[9px] tracking-wider font-semibold font-sans px-2.5 py-1 rounded-[2px] shadow-sm">
+              Có hương thơm
             </span>
           )}
         </div>
@@ -74,7 +74,7 @@ const OrchidCard: React.FC<OrchidCardProps> = ({
           <h3 className={`font-serif text-charcoal-text font-medium leading-snug group-hover:text-botanical-green transition-colors ${isList ? 'text-base sm:text-lg' : 'text-lg'}`}>
             {orchid.name}
           </h3>
-          <p className="font-serif italic text-xs text-[#747878] mt-1 uppercase tracking-wider font-light">
+          <p className="font-serif text-xs text-[#747878] mt-1 tracking-wider font-light">
             <OrchidScientificName value={orchid.englishName} />
           </p>
         </div>

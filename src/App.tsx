@@ -3361,7 +3361,7 @@ export default function App() {
 
                 <div className={`grid grid-cols-1 gap-6 ${orchidAdminViewMode === 'grid' ? 'md:grid-cols-2 xl:grid-cols-3' : ''}`} aria-busy={loadingAdminOrchids}>
                   {!loadingAdminOrchids && !adminOrchidError && pagedOrchids.map((orc) => (
-                    <div key={orc.id} className={`relative overflow-hidden rounded-xl border border-outline-variant/40 bg-white transition-all duration-300 group hover:border-botanical-green/40 ${orchidAdminViewMode === 'grid' ? 'flex flex-col' : 'flex gap-4 p-4'}`}>
+                    <div key={orc.id} className={`relative h-full overflow-hidden rounded-xl border border-outline-variant/40 bg-white transition-all duration-300 group hover:border-botanical-green/40 ${orchidAdminViewMode === 'grid' ? 'flex flex-col' : 'flex gap-4 p-4'}`}>
                       <div className={`relative shrink-0 overflow-hidden border-outline-variant/30 bg-surface-container ${orchidAdminViewMode === 'grid' ? 'aspect-[1.15] w-full border-b' : 'h-24 w-24 rounded-lg border'}`}>
                         <img 
                           src={getOrchidImageUrls(orc)[0] || "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?q=80&w=300"}
@@ -3373,8 +3373,8 @@ export default function App() {
                           referrerPolicy="no-referrer"
                         />
                         {orchidAdminViewMode === 'grid' && (orc.hasFragrance || orc.isPopular) && (
-                          <span className="absolute left-3 top-3 rounded-sm bg-[#667234] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
-                            {orc.hasFragrance ? 'Có hương thơm' : 'Được ưu chuộng'}
+                          <span className="absolute left-3 top-3 rounded-sm bg-[#667234] px-2.5 py-1 text-[10px] font-bold tracking-wide text-white shadow-sm">
+                            {orc.hasFragrance ? 'Có hương thơm' : 'Phổ biến'}
                           </span>
                         )}
                       </div>
