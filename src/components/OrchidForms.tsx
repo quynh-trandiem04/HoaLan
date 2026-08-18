@@ -10,6 +10,7 @@ import { motion } from 'motion/react';
 import { deleteUploadedImage, uploadImage, type UploadedImage } from '../services/api';
 import { getOrchidImageUrls } from '../utils/orchidImages';
 import { toRichTextHtml } from '../utils/richText';
+import { stripOrchidNameMarkup } from '../utils/orchidNames';
 import CategoryTreeSelect from './CategoryTreeSelect';
 import LocalRichTextEditor from './LocalRichTextEditor';
 
@@ -76,7 +77,7 @@ export const AddOrchidModal: React.FC<AddOrchidModalProps> = ({
   useEffect(() => {
     if (editOrchidData) {
       setName(editOrchidData.name);
-      setEnglishName(editOrchidData.englishName);
+      setEnglishName(stripOrchidNameMarkup(editOrchidData.englishName));
       setCategoryIds(editOrchidData.categoryIds);
       setShortDescription(editOrchidData.shortDescription);
       setDetailedDescription(toRichTextHtml(editOrchidData.detailedDescription));

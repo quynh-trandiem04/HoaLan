@@ -2,6 +2,7 @@ import React from 'react';
 import { Heart } from 'lucide-react';
 import { Orchid } from '../types';
 import { getOrchidImageUrls } from '../utils/orchidImages';
+import OrchidScientificName from './OrchidScientificName';
 
 interface OrchidCardProps {
   orchid: Orchid;
@@ -74,7 +75,7 @@ const OrchidCard: React.FC<OrchidCardProps> = ({
             {orchid.name}
           </h3>
           <p className="font-serif italic text-xs text-[#747878] mt-1 uppercase tracking-wider font-light">
-            {orchid.englishName}
+            <OrchidScientificName value={orchid.englishName} />
           </p>
         </div>
 

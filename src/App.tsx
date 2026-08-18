@@ -48,6 +48,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Orchid, Question, Category, CommunityPost, CareArticle, PaginatedDocuments, DocumentItem, Region, BloomSeason, FlowerColor, type ArticleCategory, type DocumentCategory } from './types';
 import { login, register, loginWithGoogle, refreshStoredAuthSession, getCategories, createCategory, getCategoryById, updateCategory, deleteCategory, getArticleById, getSectionArticles, createSectionArticle, updateSectionArticle, deleteSectionArticle, getArticleCategories, getOrchids, getOrchidById, createOrchid, updateOrchid, deleteOrchid, getDocuments, createDocument, updateDocument, deleteDocument, getDocumentCategories, createDocumentCategory, updateDocumentCategory, deleteDocumentCategory, uploadImage, getUploadedImageUrl, getUsers, createUser, updateUser, deleteUser, resetUserPassword, getDiscussions, type ArticleSection, type DiscussionPostDto, type LoginResponse, type UserListItem } from './services/api';
 import { getOrchidImageUrls } from './utils/orchidImages';
+import OrchidScientificName from './components/OrchidScientificName';
 import {
   INITIAL_QUESTIONS,
   INITIAL_COMMUNITY_POSTS
@@ -3387,7 +3388,7 @@ export default function App() {
                             </span>
                           </div>
                           <p className={`${orchidAdminViewMode === 'grid' ? 'mt-1 text-sm' : 'mt-0.5 text-[11px]'} truncate italic leading-snug text-[#56642b]`}>
-                            {orc.englishName}
+                            <OrchidScientificName value={orc.englishName} />
                           </p>
                           <p className={`${orchidAdminViewMode === 'grid' ? 'mt-5 text-sm' : 'mt-2 text-xs'} line-clamp-2 leading-relaxed text-[#434748]`}>
                             {orc.shortDescription}
