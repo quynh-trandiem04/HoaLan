@@ -146,11 +146,38 @@ const isAdminRole = (role: string): boolean => {
 const isAdminToken = (token: string | null | undefined): boolean =>
   getJwtRoles(token).some(isAdminRole);
 
+const getAuthResponseRoles = (source: unknown, depth = 0): string[] => {
+  if (!source || depth > 3 || typeof source !== 'object') return [];
+  const record = source as Record<string, unknown>;
+  const roles = ['role', 'roleName', 'roles'].flatMap((key) => {
+    const value = record[key];
+    if (typeof value === 'string') return [value];
+    if (Array.isArray(value)) return value.filter((role): role is string => typeof role === 'string');
+    return [];
+  });
+  const nested = ['data', 'result', 'user', 'profile'].flatMap((key) => getAuthResponseRoles(record[key], depth + 1));
+  return [...roles, ...nested];
+};
+
+const isAdminAuthSession = (token: string | null | undefined, authData?: LoginResponse | null): boolean =>
+  isAdminToken(token) || getAuthResponseRoles(authData).some(isAdminRole);
+
 const getStoredAccessToken = (): string | null =>
   localStorage.getItem('orchidee_auth_token')
   || sessionStorage.getItem('orchidee_auth_token');
 
-const isStoredSessionAdmin = (): boolean => isAdminToken(getStoredAccessToken());
+const getStoredAuthData = (): LoginResponse | null => {
+  const rawAuth = localStorage.getItem('orchidee_auth') || sessionStorage.getItem('orchidee_auth');
+  if (!rawAuth) return null;
+  try {
+    return JSON.parse(rawAuth) as LoginResponse;
+  } catch {
+    return null;
+  }
+};
+
+const isStoredSessionAdmin = (): boolean =>
+  isAdminAuthSession(getStoredAccessToken(), getStoredAuthData());
 
 const getFirstString = (source: Record<string, unknown> | null | undefined, keys: string[]): string => {
   if (!source) return '';
@@ -248,8 +275,12 @@ const SHOW_LEGACY_OVERVIEW = false;
 
 type PostLoginScreen = 'home' | 'discussion' | 'profile' | 'planting_and_care' | 'applications' | 'document' | 'list_orchids' | 'search' | 'dashboard';
 
-const getPostLoginScreen = (returnUrl: string | null, token: string | null | undefined): PostLoginScreen => {
-  if ((returnUrl === '/admin/dashboard' || returnUrl === '/dashboard') && isAdminToken(token)) return 'dashboard';
+const getPostLoginScreen = (
+  returnUrl: string | null,
+  token: string | null | undefined,
+  authData?: LoginResponse | null,
+): PostLoginScreen => {
+  if (isAdminAuthSession(token, authData)) return 'dashboard';
   if (returnUrl === '/discussion') return 'discussion';
   if (returnUrl === '/profile') return 'profile';
   if (returnUrl === '/planting-and-care') return 'planting_and_care';
@@ -283,7 +314,14 @@ export default function App() {
     if (path === '/forgot_password' || path === '/forgot-password') return 'forgot_password';
     if (path === '/admin/dashboard' || path === '/dashboard') {
       const storedToken = getStoredAccessToken();
-      return isAdminToken(storedToken) ? 'dashboard' : (storedToken ? 'home' : 'login');
+      const storedAuth = localStorage.getItem('orchidee_auth') || sessionStorage.getItem('orchidee_auth');
+      let authData: LoginResponse | null = null;
+      try {
+        authData = storedAuth ? JSON.parse(storedAuth) as LoginResponse : null;
+      } catch {
+        authData = null;
+      }
+      return isAdminAuthSession(storedToken, authData) ? 'dashboard' : (storedToken ? 'home' : 'login');
     }
     if (path === '/discussion') return 'discussion';
     if (path === '/planting-and-care') return 'planting_and_care';
@@ -311,7 +349,7 @@ export default function App() {
   const setScreen = (newScreen: ScreenType, id?: string) => {
     if (newScreen === 'dashboard') {
       const storedToken = getStoredAccessToken();
-      if (!isAdminToken(storedToken)) {
+      if (!isStoredSessionAdmin()) {
         const fallbackScreen: ScreenType = storedToken ? 'home' : 'login';
         setScreenState(fallbackScreen);
         window.history.pushState({}, '', storedToken ? '/' : '/login');
@@ -357,7 +395,7 @@ export default function App() {
       const isDashboardPath = window.location.pathname === '/admin/dashboard'
         || window.location.pathname === '/dashboard';
 
-      if (isDashboardPath && !isAdminToken(storedToken)) {
+      if (isDashboardPath && !isStoredSessionAdmin()) {
         window.history.replaceState({}, '', storedToken ? '/' : '/login');
         setScreenState(storedToken ? "home" : "login");
         return;
@@ -495,13 +533,20 @@ export default function App() {
       const initialScreen = getInitialScreen();
       const isDashboardPath = window.location.pathname === '/admin/dashboard'
         || window.location.pathname === '/dashboard';
-      if (isDashboardPath && !isAdminToken(storedToken)) {
+      if (isDashboardPath && !isStoredSessionAdmin()) {
         window.history.replaceState({}, '', '/');
         setScreenState('home');
         return;
       }
       if (initialScreen === "login" || initialScreen === "signup") {
-        setScreen(getPostLoginScreen(getRequestedReturnUrl(), storedToken));
+        let storedAuthData: LoginResponse | null = null;
+        const rawAuth = localStorage.getItem('orchidee_auth') || sessionStorage.getItem('orchidee_auth');
+        try {
+          storedAuthData = rawAuth ? JSON.parse(rawAuth) as LoginResponse : null;
+        } catch {
+          storedAuthData = null;
+        }
+        setScreen(getPostLoginScreen(getRequestedReturnUrl(), storedToken, storedAuthData));
       }
     } else {
       localStorage.removeItem("orchidee_admin_user");
@@ -593,7 +638,7 @@ export default function App() {
 
       setCurrentUser(normalizedEmail);
       setPassword("");
-      setScreen(getPostLoginScreen(getRequestedReturnUrl(), token));
+      setScreen(getPostLoginScreen(getRequestedReturnUrl(), token, authData));
       addToast("Đăng nhập thành công!", "success");
     } catch (error) {
       addToast(
@@ -633,7 +678,7 @@ export default function App() {
       if (sessionProfile) storage.setItem('orchidee_user', JSON.stringify(sessionProfile));
 
       setCurrentUser(googleEmail);
-      setScreen(getPostLoginScreen(getRequestedReturnUrl(), token));
+      setScreen(getPostLoginScreen(getRequestedReturnUrl(), token, authData));
       addToast("Đăng nhập Google thành công!", "success");
     } catch (error) {
       addToast(
